@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"v1/internal/storage"
 
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -27,7 +28,15 @@ func (s *ApiServer) Start() error {
 
 	err := s.configureLogger()
 
-	baseErrorHandler(err)
+	if err != nil {
+		return err
+	}
+
+	_, err = storage.New(s.logger)
+
+	if err != nil {
+		return err
+	}
 
 	s.configureRouter()
 
