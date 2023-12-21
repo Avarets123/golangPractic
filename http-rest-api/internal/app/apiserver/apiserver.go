@@ -48,7 +48,6 @@ func (s *ApiServer) configureLogger() error {
 
 func (s *ApiServer) configureRouter() {
 	s.router.HandleFunc("/hello", s.handleHello())
-
 }
 
 func (s *ApiServer) handleHello() http.HandlerFunc {

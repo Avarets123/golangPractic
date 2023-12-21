@@ -1,0 +1,5 @@
+env: dev
+log_level: debug
+server:
+  port: 4004
+  host: localhost
