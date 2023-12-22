@@ -1,9 +1,11 @@
 package apiserver
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"v1/internal/app/users"
 	"v1/internal/storage"
 
 	"github.com/gorilla/mux"
@@ -32,13 +34,13 @@ func (s *ApiServer) Start() error {
 		return err
 	}
 
-	_, err = storage.New(s.logger)
+	store, err := storage.New(s.logger)
 
 	if err != nil {
 		return err
 	}
 
-	s.configureRouter()
+	s.configureRouter(store.Db)
 
 	address := fmt.Sprintf("%s:%v", s.config.Server.Host, s.config.Server.Port)
 
@@ -68,13 +70,25 @@ type TestStruct struct {
 	IsSuccess bool
 }
 
-func (s *ApiServer) configureRouter() {
+func (s *ApiServer) configureRouter(db *sql.DB) {
 
 	s.router.HandleFunc("/hello", func(w http.ResponseWriter, r *http.Request) {
 
 		jsData, _ := json.Marshal(TestStruct{Router: "/hello", IsSuccess: true})
 
 		w.Write(jsData)
+
+	})
+
+	s.router.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
+
+		userStorage := users.New(db)
+
+		userId := userStorage.Save("simple", "123")
+
+		s.logger.Info("new userId is" + string(userId))
+
+		w.Write([]byte(userId))
 
 	})
 
