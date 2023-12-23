@@ -1,7 +1,7 @@
 package telegram
 
 import (
-	"bot-saver-v1/pkg/lib/errors"
+	"bot-saver-v1/lib/customErrors"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -63,7 +63,7 @@ func (c *Client) SendMessage(chatID int, text string) error {
 	_, err := c.doRequest(sendMessageMethod, q)
 
 	if err != nil {
-		return errors.Wrap("can't send message", err)
+		return customErrors.Wrap("can't send message", err)
 	}
 
 	return nil
@@ -72,7 +72,7 @@ func (c *Client) SendMessage(chatID int, text string) error {
 
 func (c *Client) doRequest(method string, query url.Values) (data []byte, err error) {
 
-	defer func() { err = errors.WrapIfErr("can't do request", err) }()
+	defer func() { err = customErrors.WrapIfErr("can't do request", err) }()
 
 	u := url.URL{
 		Scheme: "https",
