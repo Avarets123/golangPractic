@@ -13,5 +13,4 @@ func WrapIfErr(msg string, e error) error {
 	}
 
 	return nil
-
 }
