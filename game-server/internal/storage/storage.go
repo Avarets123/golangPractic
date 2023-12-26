@@ -1,9 +1,8 @@
-package storage
+package storage2
 
 import (
 	"database/sql"
 
-	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 )
 

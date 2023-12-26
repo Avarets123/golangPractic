@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"v1/internal/app/users"
-	"v1/internal/storage"
+	"v1/internal/config"
+	"v1/pkg/storage/postgres"
 
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
@@ -14,14 +15,14 @@ import (
 
 type ApiServer struct {
 	logger *logrus.Logger
-	config *Config
+	config *config.Config
 	router *mux.Router
 }
 
-func New(config *Config) *ApiServer {
+func New(config *config.Config, logger *logrus.Logger) *ApiServer {
 	return &ApiServer{
 		config: config,
-		logger: logrus.New(),
+		logger: logger,
 		router: mux.NewRouter(),
 	}
 }
@@ -34,11 +35,9 @@ func (s *ApiServer) Start() error {
 		return err
 	}
 
-	store, err := storage.New(s.logger)
+	const connectionStr = "postgresql://postgres:password@localhost:5434/postgres?schema=public"
 
-	if err != nil {
-		return err
-	}
+	store := postgres.NewPostgresDb(connectionStr, s.logger)
 
 	s.configureRouter(store.Db)
 
