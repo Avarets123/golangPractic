@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"v1/internal/app/apiserver"
+	"v1/internal/apiserver"
 	"v1/internal/config"
 	configureLogrus "v1/pkg/logger/logrus"
 

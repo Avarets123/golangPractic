@@ -1,5 +1,11 @@
 env: dev
-log_level: debug
+log_level: INFO
 server:
   port: 4004
   host: localhost
+db_postgres:
+  username: postgres
+  password: password
+  host: localhost
+  port: 5434
+  db_name: postgres
