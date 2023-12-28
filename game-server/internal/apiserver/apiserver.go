@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"v1/internal/apiserver/handlers"
 	"v1/internal/config"
 	"v1/pkg/storage/postgres"
 
@@ -42,27 +43,13 @@ func (s *ApiServer) Start() error {
 
 	address := fmt.Sprintf("%s:%v", s.config.Server.Host, s.config.Server.Port)
 
-	fmt.Println(address)
-
 	s.logger.Info("Api server has been started on host: " + string(s.config.Server.Host) + ":" + string(s.config.Server.Port))
 	return http.ListenAndServe(address, s.router)
 
 }
 
 func (s *ApiServer) configureRouter(db *sql.DB) {
-
-	// s.router.HandleFunc("/users", func(w http.ResponseWriter, r *http.Request) {
-
-	// 	userStorage := users.New(db)
-
-	// 	userId := userStorage.Save("simple", "123")
-
-	// 	s.logger.Info("new userId is" + string(userId))
-
-	// 	w.Write([]byte(userId))
-
-	// })
-
+	handlers.New(db, s.router, s.logger)
 }
 
 func baseErrorHandler(err error) {
